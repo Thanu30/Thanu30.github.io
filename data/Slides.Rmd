@@ -1,0 +1,110 @@
+---
+title: "Coronavirus"
+author: "Thanusaa Kanagasingam"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      countIncrementalSlides: no
+      highlightLines: yes
+      highlightStyle: github
+---
+
+```{r, echo = F, message = F, warning = F, fig.align='center'}
+  library(tidyverse)
+  library(coronavirus)
+  library(kableExtra)
+  knitr::opts_chunk$set(fig.width = 10, fig.height = 5, fig.align = 'center')
+```
+
+# Dataset: Coronavirus
+
+Due to the current situation, I would like to look at the Coronavirus dataset.
+
+Firstly, we follow the following steps:
+* load package and save data in a variable
+* filter data by **confirmed cases**
+
+
+```{r, eval = FALSE, include = TRUE, message = FALSE, warning = FALSE}
+library(coronavirus)
+library(tidyverse)
+
+dat <- coronavirus
+dat <- dat %>% 
+  filter(type == "confirmed")
+```
+
+
+???
+* Daily summary of the Coronavirus (COVID-19) cases by state/province.
+* The dataset contains the daily summary of Coronavirus cases (confirmed, death, and recovered), by state/province.
+
+---
+class:middle
+
+# Confirmed cases
+
+We look at the top 10 confirmed cases by state:
+
+```{r, eval = FALSE, include = TRUE, message = FALSE, warning = FALSE}
+coronavirus %>%
+  filter(type == "confirmed") %>%
+  group_by(country) %>%
+  summarise(total = sum(cases)) %>%
+  arrange(-total) %>%
+  head(10) 
+```
+
+---
+
+```{r, eval = TRUE, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+dat <- coronavirus %>%
+  filter(type == "confirmed") %>%
+  group_by(country) %>%
+  summarise(total = sum(cases)) %>%
+  arrange(-total) %>%
+  head(10)  
+
+dat %>%
+  knitr::kable() %>% 
+  row_spec(1, background = "yellow") %>%
+  row_spec(2, background = "yellow") 
+```
+
+---
+
+# Cases in Germany
+
+In the following plot, you can see the COVID-Cases in Germany: 
+
+```{r, eval = F}
+dat <- coronavirus  %>% 
+  filter(country == "Germany")
+
+ggplot(data = dat, aes(as.Date(date, "%m.%d"), cases)) +
+  geom_col(fill = 'firebrick') +
+  scale_x_date(date_labels = "%Y/%m/%d") +
+  xlab("date") + 
+  ylab("cases") +
+  ggtitle("Cases in Germany")
+```
+
+---
+
+```{r, echo = F}
+dat <- coronavirus  %>% 
+  filter(country == "Germany")
+
+ggplot(data = dat, aes(as.Date(date, "%m.%d"), cases)) +
+  geom_col(fill = 'firebrick') +
+  scale_x_date(date_labels = "%Y/%m/%d") +
+  xlab("date") + 
+  ylab("cases") +
+  ggtitle("Cases in Germany")
+```
+
+
+
+
+
